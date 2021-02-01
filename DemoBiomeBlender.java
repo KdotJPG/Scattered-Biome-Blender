@@ -38,7 +38,7 @@ public class DemoBiomeBlender {
         for (int zc = 0; zc < HEIGHT; zc += CHUNK_WIDTH) {
             for (int xc = 0; xc < WIDTH; xc += CHUNK_WIDTH) {
                 
-                ScatteredBiomeBlender.LinkedBiomeWeightMap firstBiomeWeightMap = blender.getBlendForChunk(SEED, xc, zc, DemoBiomeBlender::getBiomeAt);
+                LinkedBiomeWeightMap firstBiomeWeightMap = blender.getBlendForChunk(SEED, xc, zc, DemoBiomeBlender::getBiomeAt);
                 
                 for (int zi = 0; zi < CHUNK_WIDTH; zi++) {
                     for (int xi = 0; xi < CHUNK_WIDTH; xi++) {
@@ -47,11 +47,12 @@ public class DemoBiomeBlender {
                         
                         double r, g, b; r = g = b = 0;
                         
-                        for (ScatteredBiomeBlender.LinkedBiomeWeightMap entry = firstBiomeWeightMap; entry != null; entry = entry.next) {
-                            double weight = entry.weights[zi * CHUNK_WIDTH + xi];
-							r += BIOME_COLORS[entry.biome].getRed() * weight;
-							g += BIOME_COLORS[entry.biome].getGreen() * weight;
-							b += BIOME_COLORS[entry.biome].getBlue() * weight;
+                        for (LinkedBiomeWeightMap entry = firstBiomeWeightMap; entry != null; entry = entry.getNext()) {
+                            double weight = entry.getWeights()[zi * CHUNK_WIDTH + xi];
+                            int biome = entry.getBiome();
+							r += BIOME_COLORS[biome].getRed() * weight;
+							g += BIOME_COLORS[biome].getGreen() * weight;
+							b += BIOME_COLORS[biome].getBlue() * weight;
                         }
                         
                         // Render chunk borders

@@ -28,8 +28,8 @@ public class ScatteredBiomeBlender {
             // Find or create chunk biome blend weight layer entry for this biome.
             LinkedBiomeWeightMap entry = linkedBiomeMapStartEntry;
             while (entry != null) {
-                if (entry.biome == biome) break;
-                entry = entry.next;
+                if (entry.getBiome() == biome) break;
+                entry = entry.getNext();
             }
             if (entry == null) {
                 linkedBiomeMapStartEntry =
@@ -38,9 +38,10 @@ public class ScatteredBiomeBlender {
         }
         
         // If there is only one biome type in range here, we can skip the actual blending step.
-        if (linkedBiomeMapStartEntry != null && linkedBiomeMapStartEntry.next == null) {
+        if (linkedBiomeMapStartEntry != null && linkedBiomeMapStartEntry.getNext() == null) {
+            double[] weights = linkedBiomeMapStartEntry.getWeights();
             for (int i = 0; i < chunkColumnCount; i++) {
-                linkedBiomeMapStartEntry.weights[i] = 1.0;
+                weights[i] = 1.0;
             }
             return linkedBiomeMapStartEntry;
         }
@@ -75,35 +76,24 @@ public class ScatteredBiomeBlender {
                         // Find or create chunk biome blend weight layer entry for this biome.
                         LinkedBiomeWeightMap entry = linkedBiomeMapStartEntry;
                         while (entry != null) {
-                            if (entry.biome == point.getTag().biome) break;
-                            entry = entry.next;
+                            if (entry.getBiome() == point.getTag().biome) break;
+                            entry = entry.getNext();
                         }
                         
-                        entry.weights[zi * chunkWidth + xi] += weight;
+                        entry.getWeights()[zi * chunkWidth + xi] += weight;
                         columnTotalWeight += weight;
                     }
                 }
                 
                 // Normalize so all weights for a column to 1.
                 double inverseTotalWeight = 1.0 / columnTotalWeight;
-                for (LinkedBiomeWeightMap entry = linkedBiomeMapStartEntry; entry != null; entry = entry.next) {
-                    entry.weights[zi * chunkWidth + xi] *= inverseTotalWeight;
+                for (LinkedBiomeWeightMap entry = linkedBiomeMapStartEntry; entry != null; entry = entry.getNext()) {
+                    entry.getWeights()[zi * chunkWidth + xi] *= inverseTotalWeight;
                 }
             }
         }
         
         return linkedBiomeMapStartEntry;
-    }
-    
-    public static class LinkedBiomeWeightMap {
-        public final int biome;
-        public double[] weights;
-        LinkedBiomeWeightMap next;
-        public LinkedBiomeWeightMap(int biome, int chunkColumnCount, LinkedBiomeWeightMap next) {
-            this.biome = biome;
-            this.weights = new double[chunkColumnCount];
-            this.next = next;
-        }
     }
     
     @FunctionalInterface
