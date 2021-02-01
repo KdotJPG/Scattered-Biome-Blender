@@ -31,14 +31,14 @@ public class DemoBiomeBlender {
     public static void main(String[] args)
             throws IOException {
 
-        ScatteredBiomeBlender blender = new ScatteredBiomeBlender(POINT_FREQUENCY, MIN_BLEND_RADIUS, CHUNK_WIDTH, DemoBiomeBlender::getBiomeAt);
+        ScatteredBiomeBlender blender = new ScatteredBiomeBlender(POINT_FREQUENCY, MIN_BLEND_RADIUS, CHUNK_WIDTH);
 
         // Image
         BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         for (int zc = 0; zc < HEIGHT; zc += CHUNK_WIDTH) {
             for (int xc = 0; xc < WIDTH; xc += CHUNK_WIDTH) {
                 
-                ScatteredBiomeBlender.LinkedBiomeWeightMap firstBiomeWeightMap = blender.getBlendForChunk(SEED, xc, zc);
+                ScatteredBiomeBlender.LinkedBiomeWeightMap firstBiomeWeightMap = blender.getBlendForChunk(SEED, xc, zc, DemoBiomeBlender::getBiomeAt);
                 
                 for (int zi = 0; zi < CHUNK_WIDTH; zi++) {
                     for (int xi = 0; xi < CHUNK_WIDTH; xi++) {

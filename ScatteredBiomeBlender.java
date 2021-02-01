@@ -6,19 +6,17 @@ public class ScatteredBiomeBlender {
     int chunkColumnCount;
     double blendKernelRadiusSq;
     ChunkPointGatherer<BiomeEvaluation> gatherer;
-    BiomeEvaluationCallback callback;
     
-    public ScatteredBiomeBlender(double samplingFrequency, double minBlendRadius, int chunkWidth, BiomeEvaluationCallback callback) {
+    public ScatteredBiomeBlender(double samplingFrequency, double minBlendRadius, int chunkWidth) {
         this.chunkWidth = chunkWidth;
         this.chunkColumnCount = chunkWidth * chunkWidth;
-        this.callback = callback;
         double blendKernelRadius = minBlendRadius
             + UnfilteredPointGatherer.MAX_GRIDSCALE_DISTANCE_TO_CLOSEST_POINT / samplingFrequency;
         this.blendKernelRadiusSq = blendKernelRadius * blendKernelRadius;
         this.gatherer = new ChunkPointGatherer<BiomeEvaluation>(samplingFrequency, blendKernelRadius, chunkWidth);
     }
     
-    public LinkedBiomeWeightMap getBlendForChunk(long seed, int chunkBaseWorldX, int chunkBaseWorldZ) {
+    public LinkedBiomeWeightMap getBlendForChunk(long seed, int chunkBaseWorldX, int chunkBaseWorldZ, BiomeEvaluationCallback callback) {
         List<GatheredPoint<BiomeEvaluation>> points = gatherer.getPointsFromChunkBase(seed, chunkBaseWorldX, chunkBaseWorldZ);
         
         // Evaluate and aggregate all the biomes to be blended in this chunk.
