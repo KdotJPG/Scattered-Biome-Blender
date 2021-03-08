@@ -42,6 +42,7 @@ public class ChunkPointGatherer<TTag> {
                 int lastIndex = worldPoints.size() - 1;
                 worldPoints.set(i, worldPoints.get(lastIndex));
                 worldPoints.remove(lastIndex);
+                i--;
             }
         }
         
