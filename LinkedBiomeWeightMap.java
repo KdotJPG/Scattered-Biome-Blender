@@ -3,6 +3,11 @@ public class LinkedBiomeWeightMap {
     private double[] weights;
     private LinkedBiomeWeightMap next;
     
+    public LinkedBiomeWeightMap(int biome, LinkedBiomeWeightMap next) {
+        this.biome = biome;
+        this.next = next;
+    }
+    
     public LinkedBiomeWeightMap(int biome, int chunkColumnCount, LinkedBiomeWeightMap next) {
         this.biome = biome;
         this.weights = new double[chunkColumnCount];
@@ -15,6 +20,10 @@ public class LinkedBiomeWeightMap {
     
     public double[] getWeights() {
         return weights;
+    }
+    
+    public void setWeights(double[] weights) {
+        this.weights = weights;
     }
     
     public LinkedBiomeWeightMap getNext() {

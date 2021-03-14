@@ -26,6 +26,7 @@ public class UnfilteredPointGatherer<TTag>
     private static final int N_VECTORS = JITTER_VECTOR_COUNT_MULTIPLIER * 12;
     private static final int N_VECTORS_WITH_REPETITION = N_VECTORS * 4 / 3;
     private static final int VECTOR_INDEX_MASK = N_VECTORS_WITH_REPETITION - 1;
+    private static final int JITTER_SINCOS_OFFSET = JITTER_VECTOR_COUNT_MULTIPLIER * 4;
     private static double[] JITTER_SINCOS;
     static {
         final int sinCosArraySize = N_VECTORS_WITH_REPETITION * 5 / 4;
@@ -186,7 +187,7 @@ public class UnfilteredPointGatherer<TTag>
 
             // Jittered point, not yet unscaled for frequency
             double scaledX = xb + point.xv + JITTER_SINCOS[index];
-            double scaledZ = zb + point.zv + JITTER_SINCOS[index + 8];
+            double scaledZ = zb + point.zv + JITTER_SINCOS[index + JITTER_SINCOS_OFFSET];
             
             // Unscale the coordinate and add it to the list.
             // "Unfiltered" means that, even if the jitter took it out of range, we don't check for that.

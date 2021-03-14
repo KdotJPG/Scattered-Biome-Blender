@@ -20,6 +20,7 @@ public class ChunkPointGatherer<TTag> {
     }
     
     public List<GatheredPoint<TTag>> getPointsFromChunkBase(long seed, int chunkBaseWorldX, int chunkBaseWorldZ) {
+        // Technically, the true minimum is between coordinates. But tests showed it was more efficient to add before converting to doubles.
         return getPointsFromChunkCenter(seed, chunkBaseWorldX + halfChunkWidth, chunkBaseWorldZ + halfChunkWidth);
     }
     
@@ -29,7 +30,7 @@ public class ChunkPointGatherer<TTag> {
         for (int i = 0; i < worldPoints.size(); i++) {
             GatheredPoint<TTag> point = worldPoints.get(i);
             
-            // Check if point contribution radius lies outside chunk
+            // Check if point contribution radius lies outside any coordinate in the chunk
             double axisCheckValueX = Math.abs(point.getX() - chunkCenterWorldX) - halfChunkWidth;
             double axisCheckValueZ = Math.abs(point.getZ() - chunkCenterWorldZ) - halfChunkWidth;
             if (axisCheckValueX >= maxPointContributionRadius || axisCheckValueZ >= maxPointContributionRadius
@@ -38,10 +39,11 @@ public class ChunkPointGatherer<TTag> {
                 
                 // If so, remove it.
                 // Copy the last value to this value, and remove the last,
-                // to avoid shifting and because order doesn't matter.
+                // to avoid shifting because order doesn't matter.
                 int lastIndex = worldPoints.size() - 1;
                 worldPoints.set(i, worldPoints.get(lastIndex));
                 worldPoints.remove(lastIndex);
+                i--;
             }
         }
         
